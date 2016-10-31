@@ -13,51 +13,58 @@ import java.io.IOException;
 
 public class FileConsoleWriter extends FileWriter{
 
-
-    public FileConsoleWriter(String fileName) throws IOException {
+    public FileConsoleWriter(String fileName) throws IOException
+    {
         super(fileName);
     }
 
-    public FileConsoleWriter(String fileName, boolean append) throws IOException {
+    public FileConsoleWriter(String fileName, boolean append) throws IOException
+    {
         super(fileName, append);
     }
 
-    public FileConsoleWriter(File file) throws IOException {
+    public FileConsoleWriter(File file) throws IOException
+    {
         super(file);
     }
 
-    public FileConsoleWriter(File file, boolean append) throws IOException {
+    public FileConsoleWriter(File file, boolean append) throws IOException
+    {
         super(file, append);
     }
 
-    public FileConsoleWriter(FileDescriptor fd) {
+    public FileConsoleWriter(FileDescriptor fd)
+    {
         super(fd);
     }
 
     @Override
-    public void write(int c) throws IOException {
-        write(new char[]{ (char)c }, 0, 1);
+    public void write(int c) throws IOException
+    {
+        super.write(c);
     }
 
     @Override
-    public void write(char[] cbuf, int off, int len) throws IOException {
-        System.out.print((new String(cbuf)).substring(off, off+len));
+    public void write(char[] cbuf, int off, int len) throws IOException
+    {
         super.write(cbuf, off, len);
     }
 
     @Override
-    public void write(String str, int off, int len) throws IOException {
-        write(str.toCharArray(), off, len);
+    public void write(String str, int off, int len) throws IOException
+    {
+        super.write(str, off, len);
     }
 
     @Override
-    public void write(char[] cbuf) throws IOException {
-        write(cbuf, 0, cbuf.length);
+    public void write(String str) throws IOException
+    {
+        super.write(str);
     }
 
     @Override
-    public void write(String str) throws IOException {
-        write(str, 0, str.length());
+    public void write(char[] cbuf) throws IOException
+    {
+        super.write(cbuf);
     }
-
 }

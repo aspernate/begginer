@@ -15,20 +15,32 @@ import java.io.*;
 6) проверить, что в файле есть данные из п.2 и п.5
 */
 public class Solution implements Serializable, AutoCloseable {
-
-    public static void main(String args[]) throws Exception{
-        Solution solution = new Solution("/tmp/1.txt");
-        solution.writeObject("SUKA");
-        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream("/tmp/2.tmp"));
-        solution.writeObject(out);
-        ObjectInputStream in = new ObjectInputStream(new FileInputStream("/tmp/2.tmp"));
-        Solution newSolution;
+    public static void main (String[] args) throws Exception
+    {
+        Solution solution1 = new Solution("D:\\1.txt");
+        solution1.writeObject("Hi1");
+        solution1.close();
+        //SAVE
+        FileOutputStream fileOutputStream = new FileOutputStream("D:\\2.txt");
+        ObjectOutputStream outputStream = new ObjectOutputStream(fileOutputStream);
+        outputStream.writeObject(solution1);
+        outputStream.flush();
+        outputStream.close();
+        //LOAD
+        FileInputStream fileInputStream = new FileInputStream("D:\\2.txt");
+        ObjectInputStream inputStream = new ObjectInputStream(fileInputStream);
+        Solution solution2 = (Solution) inputStream.readObject();
+        inputStream.close();
+        solution2.writeObject("Hi2");
+        solution2.writeObject("Hi3");
+        solution2.close();
     }
 
-
-    private FileOutputStream stream;
+    private transient FileOutputStream stream;
+    private String fileName;
 
     public Solution(String fileName) throws FileNotFoundException {
+        this.fileName = fileName;
         this.stream = new FileOutputStream(fileName);
     }
 
@@ -40,12 +52,11 @@ public class Solution implements Serializable, AutoCloseable {
 
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.defaultWriteObject();
-        out.close();
     }
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
         in.defaultReadObject();
-        in.close();
+        stream = new FileOutputStream(this.fileName, true);
     }
 
     @Override

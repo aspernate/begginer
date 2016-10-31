@@ -29,27 +29,42 @@ text1, text2 могут быть пустыми
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Solution {
     public static void main(String[] args) throws Exception{
-        BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-        //FileReader fileReader = new FileReader(reader.readLine());
-        BufferedReader fileReader = new BufferedReader(new FileReader("/tmp/1.txt"));
-        reader.close();
+        BufferedReader consoleReader = new BufferedReader(new InputStreamReader(System.in));
+        BufferedReader fileReader = new BufferedReader(new FileReader(consoleReader.readLine()));
+        consoleReader.close();
         String str = "";
         while (fileReader.ready()){
             str = str + fileReader.readLine();
         }
-        //Pattern pattern = Pattern.compile("<tag.*>.*(<tag.*>.*</tag>)*.*</tag>");
-        Pattern pattern = Pattern.compile("<tag");
+        fileReader.close();
+
+        Pattern pattern = Pattern.compile("(<" + args[0] + ")|(</" + args[0] + ">)");
         Matcher matcher = pattern.matcher(str);
-        System.out.println("!" + str);
-        int openCount = 0;
-        int closeCount = 0;
-        int startInd;
-        int endInd;
-        matcher.start();
+        ArrayList<Integer> list = new ArrayList<>();
+        LinkedHashMap<Integer, Integer> map = new LinkedHashMap<>();
+        while(matcher.find()){
+            if(matcher.start(1) >= 0) {
+                list.add(matcher.start(1));
+                map.put(matcher.start(1), null);
+            }
+            if(matcher.end(2) >= 0) {
+                map.put(list.get(list.size()-1), matcher.end(2));
+                list.remove(list.size()-1);
+            }
+        }
+        for(Map.Entry<Integer, Integer> p: map.entrySet()){
+            System.out.println(str.substring(p.getKey(), p.getValue()));
+        }
+
     }
+
 }
+
