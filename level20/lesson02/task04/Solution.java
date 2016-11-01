@@ -30,6 +30,9 @@ public class Solution {
 
             loadedObject.load(inputStream);
             //check here that classWithStatic object equals to loadedObject object - проверьте тут, что classWithStatic и loadedObject равны
+            System.out.println(loadedObject.staticString);
+            System.out.println(6);
+            System.out.println(7);
 
             outputStream.close();
             inputStream.close();
@@ -50,10 +53,18 @@ public class Solution {
 
         public void save(OutputStream outputStream) throws Exception {
             //implement this method - реализуйте этот метод
+            PrintWriter printWriter = new PrintWriter(outputStream);
+            printWriter.println(staticString);
+            printWriter.println(i);
+            printWriter.println(j);
+            printWriter.flush();
         }
 
         public void load(InputStream inputStream) throws Exception {
-            //implement this method - реализуйте этот метод
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            staticString = reader.readLine();
+            i = Integer.parseInt(reader.readLine());
+            j = Integer.parseInt(reader.readLine());
         }
     }
 }

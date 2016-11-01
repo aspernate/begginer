@@ -1,15 +1,18 @@
 package com.javarush.test.level15.lesson12.home04;
 
 /**
- * Created by riabov on 25.05.16.
+ * Created by Tony Loner on 27.05.2016.
  */
-public class Moon {
-    private static Moon ourInstance = new Moon();
+public class Moon implements Planet
+{
+    private static Moon  instance;
 
-    public static Moon getInstance() {
-        return ourInstance;
-    }
+    private Moon (){}
 
-    private Moon() {
+    public static Moon  getInstance(){
+        if(instance == null){
+            instance = new Moon ();
+        }
+        return instance;
     }
 }
