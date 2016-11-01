@@ -77,8 +77,8 @@ public class StatisticEventManager
         roundedDate.set(Calendar.MINUTE, 0);
         roundedDate.set(Calendar.SECOND, 0);
         roundedDate.set(Calendar.MILLISECOND, 0);
-        // roundedDate.add(Calendar.DAY_OF_MONTH, (int) (Math.random()*3)); // рандом даты для тестов
-        //  roundedDate.add(Calendar.MONTH, (int) (Math.random()*3));       //
+        // roundedDate.add(Calendar.DAY_OF_MONTH, (int) (Math.RANDOM()*3)); // рандом даты для тестов
+        //  roundedDate.add(Calendar.MONTH, (int) (Math.RANDOM()*3));       //
         return roundedDate.getTime();
     }
 
