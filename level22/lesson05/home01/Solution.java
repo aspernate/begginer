@@ -1,5 +1,8 @@
 package com.javarush.test.level22.lesson05.home01;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /* Нитиевые строки или строковые нити? Вот в чем вопрос.
 1. Метод getPartOfString должен возвращать подстроку между первой и последней табуляцией.
 2. На некорректные данные getPartOfString должен бросить исключение:
@@ -40,6 +43,21 @@ public class Solution {
     }
 
     public String getPartOfString(String string, String threadName) {
-        return null;
+        String result;
+        try {
+            result = string.substring(string.indexOf("\t")+1, string.lastIndexOf("\t"));
+        }
+        catch (StringIndexOutOfBoundsException e){
+            switch (threadName)
+            {
+                case FIRST_THREAD_NAME:
+                    throw new TooShortStringFirstThreadException();
+                case SECOND_THREAD_NAME:
+                    throw new TooShortStringSecondThreadException();
+                default:
+                    throw new RuntimeException(e);
+            }
+        }
+        return result;
     }
 }

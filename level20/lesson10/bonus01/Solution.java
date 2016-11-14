@@ -1,7 +1,6 @@
 package com.javarush.test.level20.lesson10.bonus01;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /* Алгоритмы-числа
 Число S состоит из M чисел, например, S=370 и M(количество цифр)=3
@@ -20,8 +19,11 @@ public class Solution {
 
     public static void main(String[] args){
         long a=System.currentTimeMillis();
-        int[] y = getNumbers(1000);
+        int[] y = getNumbers(1000000000);
         long b=System.currentTimeMillis();
+        for(int i: y) {
+            System.out.println(i);
+        }
         System.out.println("time seconds "+(b-a)/1000);
         System.out.println("memory "+(Runtime.getRuntime().totalMemory()
                 - Runtime.getRuntime().freeMemory())/1024/1024 + " mb");
@@ -30,57 +32,29 @@ public class Solution {
     public static int[] getNumbers(int N) {
         int[] result = null;
         List<Integer> list = new ArrayList<>();
-        for(int i = 1; i < N; i++) {
-            int degree = getDegree(i);
-            for (int j = degree; j <= getDegree(N); j++) {
-                int sum = 0;
-                int input = i;
-                int now = 0;
-                int last = 0;
-                boolean stop = false;
-                do {
-                    now = input % 10;
-                    if (last < now && last != 0 || now == 0) {
-                        stop = true;
-                        break;
+        for (int n = 1; n< N; n++){
+            int sum = 0, temp, r;
+            int q=0;
+            temp = n;
+            int length = (int)(Math.log10(n)+1);
+            while( temp != 0 )
+            {
+                for (int i = 0; i< length; i++) {
+                    int prod = 1;
+                    r = temp%10;
+                    for(int j = 0; j< length; j++){
+                        prod = prod *r;
                     }
-                    sum = sum + (int) Math.pow(now, j);
-                    last = now;
-
-                } while ((input /= 10) > 0);
-
-                if (stop) continue;
-                if(getDegree(sum) > getDegree(N))
-                    break;
-
-               // System.out.println(i + " " + sum);
-
-                input = sum;
-                int new_sum=0;
-                do {
-                    now = input % 10;
-                    new_sum = new_sum + (int) Math.pow(now, getDegree(sum));
-                } while ((input /= 10) > 0);
-                if(sum == new_sum){
-                    System.out.println(i + " " + sum);
+                    sum = sum + prod;
+                    temp = temp/10;
                 }
-
-
-                //System.out.println(i);
-
             }
+            if ( n == sum ){list.add(n);}
         }
-
+        result = new int[list.size()];
+        for (int i = 0; i < list.size(); i++) {
+            result[i] = list.get(i);
+        }
         return result;
-    }
-
-    public static int getDegree(int i) {
-        int degree = 0;
-
-        do {
-            degree += 1;
-        } while ( (i /= 10) > 0);
-
-        return degree;
     }
 }
