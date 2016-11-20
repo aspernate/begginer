@@ -7,9 +7,6 @@ import com.javarush.test.level31.lesson15.big01.exception.PathIsNotFoundExceptio
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-/**
- * Created by riabov on 18.11.16.
- */
 public class ZipCreateCommand extends ZipCommand {
     @Override
     public void execute() throws Exception {
