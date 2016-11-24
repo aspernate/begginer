@@ -1,7 +1,11 @@
 package com.javarush.test.level32.lesson15.big01;
 
+import javax.swing.*;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.BadLocationException;
 import javax.swing.text.html.HTMLDocument;
-import java.io.File;
+import javax.swing.text.html.HTMLEditorKit;
+import java.io.*;
 
 /**
  * Created by Tony Loner on 21.11.2016.
@@ -18,12 +22,25 @@ public class Controller
     }
 
     public void  init() {
-
+        createNewDocument();
     }
 
 
+    public HTMLDocument getDocument() {
+        return document;
+    }
+
     public void exit() {
         System.exit(0);
+    }
+
+    public void resetDocument() {
+        if(document != null) {
+            document.removeUndoableEditListener(view.getUndoListener());
+        }
+        document = (HTMLDocument) new HTMLEditorKit().createDefaultDocument();
+        document.addUndoableEditListener(view.getUndoListener());
+        view.update();
     }
 
     public static void main(String[] args) {
@@ -33,4 +50,84 @@ public class Controller
         view.init();
         controller.init();
     }
+
+    public void setPlainText(String text){
+        resetDocument();
+        StringReader stringReader = new StringReader(text);
+        try {
+            new HTMLEditorKit().read(stringReader, document, 0);
+        } catch (IOException e) {
+            ExceptionHandler.log(e);
+        } catch (BadLocationException e) {
+            ExceptionHandler.log(e);
+        }
+    }
+
+    public String getPlainText() {
+        StringWriter stringWriter = new StringWriter();
+        try {
+            new HTMLEditorKit().write(stringWriter, document, 0, document.getLength());
+        } catch (IOException e) {
+            ExceptionHandler.log(e);
+        } catch (BadLocationException e) {
+            ExceptionHandler.log(e);
+        }
+        return stringWriter.toString();
+    }
+
+    public void createNewDocument(){
+        view.selectHtmlTab();
+        resetDocument();
+        view.setTitle("HTML редактор");
+        view.resetUndo();
+        currentFile = null;
+    }
+
+    public void openDocument() {
+        view.selectHtmlTab();
+        JFileChooser jFileChooser = new JFileChooser();
+        jFileChooser.setFileFilter(new HTMLFileFilter());
+        int returnVal = jFileChooser.showOpenDialog(view);
+        if(returnVal == JFileChooser.APPROVE_OPTION) {
+            currentFile = jFileChooser.getSelectedFile();
+            resetDocument();
+            view.setTitle(currentFile.getName());
+            try(FileReader fileReader = new FileReader(currentFile)) {
+                new HTMLEditorKit().read(fileReader, document, 0);
+                view.resetUndo();
+            } catch (Exception e) {
+                ExceptionHandler.log(e);
+            }
+        }
+    }
+
+    public void saveDocument() {
+        view.selectHtmlTab();
+        if(currentFile != null) {
+            try (FileWriter fileWriter = new FileWriter(currentFile)) {
+                new HTMLEditorKit().write(fileWriter, document, 0, document.getLength());
+            } catch (Exception e) {
+                ExceptionHandler.log(e);
+            }
+        } else {
+            saveDocumentAs();
+        }
+    }
+
+    public void saveDocumentAs() {
+        view.selectHtmlTab();
+        JFileChooser jFileChooser = new JFileChooser();
+        jFileChooser.setFileFilter(new HTMLFileFilter());
+        int returnVal = jFileChooser.showSaveDialog(view);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            currentFile = jFileChooser.getSelectedFile();
+            view.setTitle(currentFile.getName());
+            try (FileWriter fileWriter = new FileWriter(currentFile)) {
+                new HTMLEditorKit().write(fileWriter, document, 0, document.getLength());
+            } catch (Exception e) {
+                ExceptionHandler.log(e);
+            }
+        }
+    }
 }
+
